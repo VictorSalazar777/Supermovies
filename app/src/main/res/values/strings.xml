@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name" translatable="false">Movies2</string>
+    <string name="base_url" translatable="false">https://api.themoviedb.org/3/</string>
+    <string name="movie_request" translatable="false">/movie/550</string>
+    <string name="api_key_parameter" translatable="false">\?api_key=</string>
+    <string name="btn_load_movie">Load movie</string>
+    <string name="description_movie_img">poster image</string>
+</resources>
