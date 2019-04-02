@@ -62,8 +62,14 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
                         url = baseUrl + size500 + movie.poster_path
 
                     }
+
                     Timber.i("poster url: $url")
-                    loadMovieSuccessful.value = MyMovie(movie.id, movie.title, url)
+                    loadMovieSuccessful.value = MyMovie(
+                        movie.id,
+                        movie.title,
+                        url,
+                        movie.overview
+                        )
                 }
             }
 
