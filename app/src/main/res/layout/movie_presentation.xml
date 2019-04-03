@@ -7,11 +7,22 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+    <ProgressBar
+            android:id="@+id/my_progress_bar"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+    </ProgressBar>
+
     <TextView
             android:id="@+id/txv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
+            android:text="@string/txv_title"
             app:layout_constraintBottom_toTopOf="@id/img_movie"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

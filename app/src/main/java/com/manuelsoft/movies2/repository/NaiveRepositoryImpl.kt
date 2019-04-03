@@ -5,7 +5,23 @@ import com.manuelsoft.movies2.data.Configuration
 import com.manuelsoft.movies2.data.Movie
 import com.manuelsoft.movies2.network.MovieModule
 
-class NaiveRepositoryImpl(context: Context) : Repository {
+class NaiveRepositoryImpl private constructor(context: Context) : Repository {
+
+    companion object {
+        private var instance: NaiveRepositoryImpl? = null
+        private var LOCK = Object()
+        fun getInstance(context: Context) : Repository? {
+            if (instance == null) {
+                synchronized(LOCK) {
+                    if (instance == null) {
+                        instance = NaiveRepositoryImpl(context = context.applicationContext)
+                    }
+                }
+            }
+
+            return instance
+        }
+    }
 
     private val movieModule = MovieModule(context)
 

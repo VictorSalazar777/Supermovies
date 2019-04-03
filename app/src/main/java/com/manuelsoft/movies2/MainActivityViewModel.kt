@@ -19,10 +19,12 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
     private val loadMovieSuccessful = MutableLiveData<MyMovie>()
     private val loadMovieUnsuccessful = MutableLiveData<Int>()
     private var configuration: Configuration? = null
+    private val loadWasSuccessful = MutableLiveData<Boolean>()
 
 
     init {
         loadConfiguration()
+        loadWasSuccessful.value = false
     }
 
     private fun loadConfiguration() {
@@ -51,6 +53,7 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
                 Timber.e("loadMovieFailure()")
                 Timber.e(throwable)
                 loadMovieFailure.value = throwable
+                loadWasSuccessful.value = false
             }
 
             override fun onSuccessful(body: Movie?, code: Int) {
@@ -70,14 +73,20 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
                         url,
                         movie.overview
                         )
+                    loadWasSuccessful.value = true
                 }
             }
 
             override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
                 Timber.e( "%s, code = $code", errorBody?.string())
                 loadMovieUnsuccessful.value = code
+                loadWasSuccessful.value = false
             }
         })
+    }
+
+    fun loadWasSuccessful(): LiveData<Boolean> {
+        return loadWasSuccessful
     }
 
     fun loadConfigurationFailure(): LiveData<Throwable> {

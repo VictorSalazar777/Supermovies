@@ -2,4 +2,6 @@
 <resources>
     <string name="btn_load_movie">Cargar película</string>
     <string name="description_movie_img">imagen de poster</string>
+    <string name="txv_title">Título</string>
+    <string name="txv_overview_title">Resumen</string>
 </resources>

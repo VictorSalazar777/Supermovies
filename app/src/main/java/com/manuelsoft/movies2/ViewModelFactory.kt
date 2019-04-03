@@ -3,7 +3,6 @@ package com.manuelsoft.movies2
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.manuelsoft.movies2.repository.Repository
-import java.lang.IllegalArgumentException
 
 class ViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory{
 

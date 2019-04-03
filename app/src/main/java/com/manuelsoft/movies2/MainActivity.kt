@@ -3,24 +3,31 @@ package com.manuelsoft.movies2
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.manuelsoft.movies2.repository.NaiveRepositoryImpl
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    //private val fragmentTagsMap = HashMap<String, String>()
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val moviePresentationFragment = MoviePresentationFragment()
-       // fragmentTagsMap.put(MoviePresentationFragment.TAG, moviePresentationFragment.toString())
-        supportFragmentManager.beginTransaction().add(R.id.movie_presentation_container,
-            moviePresentationFragment, moviePresentationFragment.toString()).commit()
+        viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, this)
+        viewpager.adapter = viewPagerAdapter
+        viewpager.currentItem = 0
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            val movieDetailsFragment = MovieDetailsFragment()
-            supportFragmentManager.beginTransaction().add(R.id.movie_details_container,
-                movieDetailsFragment, movieDetailsFragment.toString()).commit()
+        val factory = NaiveRepositoryImpl.getInstance(this)?.let { ViewModelFactory(it) }
+        val viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            viewModel.loadWasSuccessful().observe(this, Observer {
+                viewPagerAdapter.enableSecondFragment(it)
+            })
+        } else {
+            viewPagerAdapter.enableSecondFragment(true)
         }
 
     }
