@@ -2,6 +2,7 @@ package com.manuelsoft.movies2.network
 
 import android.content.Context
 import com.manuelsoft.movies2.R
+import com.manuelsoft.movies2.Utils
 import com.manuelsoft.movies2.data.Configuration
 import com.manuelsoft.movies2.data.Movie
 import okhttp3.ResponseBody
@@ -51,7 +52,8 @@ class MovieModule(private val context: Context) {
 
     fun loadMovie(callback: MovieCallback<Movie>) {
         val movieService = provideMovieService()
-        val call = movieService.getMovie(context.getString(R.string.themoviedb_api_key))
+        val call = movieService.getMovie((Utils.getRandomDoubleBetweenRange(1.0, 40000.0).toInt()).toString(),
+            context.getString(R.string.themoviedb_api_key))
 
         Timber.i("loadMovie: url = %s", call.request().url())
         call.enqueue(object: Callback<Movie> {

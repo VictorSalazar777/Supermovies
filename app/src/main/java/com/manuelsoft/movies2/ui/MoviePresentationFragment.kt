@@ -1,4 +1,4 @@
-package com.manuelsoft.movies2
+package com.manuelsoft.movies2.ui
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -13,6 +13,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.manuelsoft.movies2.R
 import com.manuelsoft.movies2.repository.NaiveRepositoryImpl
 import kotlinx.android.synthetic.main.movie_presentation.*
 
@@ -29,7 +30,11 @@ class MoviePresentationFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val factory = NaiveRepositoryImpl.getInstance(requireContext())?.let { ViewModelFactory(it) }
+        val factory = NaiveRepositoryImpl.getInstance(requireContext())?.let {
+            ViewModelFactory(
+                it
+            )
+        }
         val viewModel = ViewModelProviders.of(requireActivity(), factory).get(MainActivityViewModel::class.java)
         val requestListener = object: RequestListener<Drawable> {
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean

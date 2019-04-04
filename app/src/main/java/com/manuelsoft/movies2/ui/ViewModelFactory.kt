@@ -1,4 +1,4 @@
-package com.manuelsoft.movies2
+package com.manuelsoft.movies2.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

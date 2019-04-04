@@ -1,10 +1,11 @@
-package com.manuelsoft.movies2
+package com.manuelsoft.movies2.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.manuelsoft.movies2.R
 import com.manuelsoft.movies2.repository.NaiveRepositoryImpl
 import kotlinx.android.synthetic.main.activity_main.*
 

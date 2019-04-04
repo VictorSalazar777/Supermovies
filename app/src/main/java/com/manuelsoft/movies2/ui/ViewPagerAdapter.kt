@@ -1,9 +1,10 @@
-package com.manuelsoft.movies2
+package com.manuelsoft.movies2.ui
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.manuelsoft.movies2.R
 
 class ViewPagerAdapter(fm: FragmentManager?, private val context: Context) : FragmentStatePagerAdapter(fm) {
 
