@@ -41,7 +41,7 @@ class MoviePresentationFragment : Fragment() {
             ): Boolean {
                 txv_title.visibility = View.VISIBLE
                 img_movie.visibility = View.VISIBLE
-                my_progress_bar.visibility = View.GONE
+                movie_presentation_progress_bar.visibility = View.GONE
                 return false
             }
 
@@ -50,7 +50,7 @@ class MoviePresentationFragment : Fragment() {
             ): Boolean {
                 txv_title.visibility = View.VISIBLE
                 img_movie.visibility = View.VISIBLE
-                my_progress_bar.visibility = View.GONE
+                movie_presentation_progress_bar.visibility = View.GONE
                 return false
             }
 
@@ -66,7 +66,7 @@ class MoviePresentationFragment : Fragment() {
             viewModel.loadMovie()
             txv_title.visibility = View.INVISIBLE
             img_movie.visibility = View.INVISIBLE
-            my_progress_bar.visibility = View.VISIBLE
+            movie_presentation_progress_bar.visibility = View.VISIBLE
         }
     }
 }

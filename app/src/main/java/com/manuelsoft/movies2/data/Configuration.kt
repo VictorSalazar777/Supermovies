@@ -1,6 +1,10 @@
 package com.manuelsoft.movies2.data
 
+import com.google.gson.annotations.SerializedName
+
 data class Configuration(
+    @field:SerializedName("images")
     val images: Images,
-    val change_keys: List<String>
+    @field:SerializedName("change_keys")
+    val changeKeys: List<String>
 )

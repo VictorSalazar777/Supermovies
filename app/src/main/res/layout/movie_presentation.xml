@@ -8,7 +8,7 @@
         tools:context=".ui.MainActivity">
 
     <ProgressBar
-            android:id="@+id/my_progress_bar"
+            android:id="@+id/movie_presentation_progress_bar"
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:visibility="gone"
