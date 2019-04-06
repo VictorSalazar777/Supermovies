@@ -41,13 +41,13 @@ class MovieDetailsFragment : Fragment() {
             webview_overview.loadData(getString(R.string.movie_overview, it.overview), "text/html", "UTF-8")
             txv_overview_title.visibility = View.VISIBLE
             webview_overview.visibility = View.VISIBLE
-            movie_presentation_progress_bar.visibility = View.GONE
+            movie_details_progress_bar.visibility = View.GONE
         })
 
-        btn_load_movie.setOnClickListener {
-            txv_overview_title.visibility = View.INVISIBLE
+        viewModel.loadingMovie().observe(this, Observer {
             webview_overview.visibility = View.INVISIBLE
-            movie_presentation_progress_bar.visibility = View.VISIBLE
-        }
+            movie_details_progress_bar.visibility = View.VISIBLE
+        })
+
     }
 }

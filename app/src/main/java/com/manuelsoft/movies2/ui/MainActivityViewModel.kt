@@ -3,6 +3,7 @@ package com.manuelsoft.movies2.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.manuelsoft.movies2.MyResponse
 import com.manuelsoft.movies2.data.Configuration
 import com.manuelsoft.movies2.data.Movie
 import com.manuelsoft.movies2.entity.MyMovie
@@ -15,10 +16,13 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
 
     private val loadConfigurationFailure = MutableLiveData<Throwable>()
     private val loadConfigurationUnsuccessful = MutableLiveData<Int>()
+    private var configuration: Configuration? = null
+    private var loadingMovie = MutableLiveData<Boolean>()
+    private lateinit var configurationResponse : MyResponse<Configuration>
+
     private val loadMovieFailure = MutableLiveData<Throwable>()
     private val loadMovieSuccessful = MutableLiveData<MyMovie>()
     private val loadMovieUnsuccessful = MutableLiveData<Int>()
-    private var configuration: Configuration? = null
     private val loadWasSuccessful = MutableLiveData<Boolean>()
 
 
@@ -32,22 +36,26 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
             override fun onFailure(throwable: Throwable) {
                 Timber.e("loadConfigurationFailure()")
                 Timber.e(throwable)
-                loadMovieFailure.value = throwable
+                loadConfigurationFailure.value = throwable
+                MyResponse.error("loadConfigurationFailure()", throwable)
             }
 
             override fun onSuccessful(body: Configuration?, code: Int) {
                 configuration = body
+                MyResponse.success(body)
             }
 
             override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
                 Timber.e( "%s, code = $code", errorBody?.string())
                 loadConfigurationUnsuccessful.value = code
+                MyResponse.error("%s, code = $code", errorBody?.string())
             }
 
         })
     }
 
     fun loadMovie() {
+        loadingMovie.value = true
         repository.loadMovie(callback = object : MovieModule.MovieCallback<Movie> {
             override fun onFailure(throwable: Throwable) {
                 Timber.e("loadMovieFailure()")
@@ -85,6 +93,10 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
         })
     }
 
+    fun loadingMovie() : LiveData<Boolean>{
+        return loadingMovie
+    }
+
     fun loadWasSuccessful(): LiveData<Boolean> {
         return loadWasSuccessful
     }
@@ -108,5 +120,7 @@ class MainActivityViewModel(private val repository: Repository) : ViewModel() {
     fun loadMovieUnsuccessful(): LiveData<Int> {
         return loadMovieUnsuccessful
     }
+
+
 
 }
