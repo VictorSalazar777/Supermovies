@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.manuelsoft.movies2.data.Configuration
-import com.manuelsoft.movies2.network.MovieModule.MovieCallback
+import com.manuelsoft.movies2.network.RetrofitProvider.Callback
 import okhttp3.ResponseBody
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertThat
@@ -31,7 +31,7 @@ class MovieModuleTest {
 
         var myMovie: Configuration? = null
 
-        val callback =  object : MovieCallback<Configuration> {
+        val callback =  object : Callback<Configuration> {
             override fun onFailure(throwable: Throwable) {
                 println("onFailure(): $throwable")
             }
@@ -48,7 +48,7 @@ class MovieModuleTest {
             }
 
         }
-        val movieModule = MovieModule(context)
+        val movieModule = RetrofitProvider(context)
         movieModule.loadConfiguration(callback)
 
         countDownLatch.await(2000, TimeUnit.MILLISECONDS)
@@ -62,7 +62,7 @@ class MovieModuleTest {
 
         var myConfiguration: Configuration? = null
 
-        val callback =  object : MovieCallback<Configuration> {
+        val callback =  object : Callback<Configuration> {
             override fun onFailure(throwable: Throwable) {
                 println("onFailure(): $throwable")
             }
@@ -79,7 +79,7 @@ class MovieModuleTest {
             }
 
         }
-        val movieModule = MovieModule(context)
+        val movieModule = RetrofitProvider(context)
         movieModule.loadConfiguration(callback)
 
         countDownLatch.await(2000, TimeUnit.MILLISECONDS)

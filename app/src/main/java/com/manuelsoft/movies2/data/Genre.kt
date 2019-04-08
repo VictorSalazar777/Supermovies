@@ -6,4 +6,5 @@ data class Genre(
     @field:SerializedName("id")
     val id: Long,
     @field:SerializedName("name")
-    val name: String)
+    val name: String
+)

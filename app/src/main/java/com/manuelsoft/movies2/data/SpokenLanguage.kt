@@ -6,4 +6,5 @@ data class SpokenLanguage(
     @field:SerializedName("iso_639_1")
     val iso_639_1: String,
     @field:SerializedName("name")
-    val name: String)
+    val name: String
+)

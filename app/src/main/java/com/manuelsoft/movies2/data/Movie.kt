@@ -51,4 +51,4 @@ data class Movie(
     val vote_average: Float,
     @field:SerializedName("vote_count")
     val vote_count: Int
-    )
+)

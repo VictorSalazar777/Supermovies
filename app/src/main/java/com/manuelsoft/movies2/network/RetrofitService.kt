@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface MovieService {
+interface RetrofitService {
 
     @GET("movie/{movieId}")
     fun getMovie(@Path("movieId") movieId: String, @Query("api_key") apiKey: String): Call<Movie>

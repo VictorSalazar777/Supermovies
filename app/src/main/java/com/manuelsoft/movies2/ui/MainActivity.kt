@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.manuelsoft.movies2.R
-import com.manuelsoft.movies2.repository.NaiveRepositoryImpl
+import com.manuelsoft.movies2.business.usecase.LoadUseCase
+import com.manuelsoft.movies2.repository.RepositoryImpl
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,11 +22,20 @@ class MainActivity : AppCompatActivity() {
         viewpager.adapter = viewPagerAdapter
         viewpager.currentItem = 0
 
-        val factory = NaiveRepositoryImpl.getInstance(this)?.let { ViewModelFactory(it) }
+        val factory = RepositoryImpl.getInstance(this)?.let { ViewModelFactory(LoadUseCase(it)) }
         val viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            viewModel.loadWasSuccessful().observe(this, Observer {
-                viewPagerAdapter.enableSecondFragment(it)
+            viewModel.loadMovieWasSuccessful().observe(this, Observer {
+                when (it) {
+                    is LoadMovieResponse.Success -> {
+                        viewPagerAdapter.enableSecondFragment(true)
+                    }
+
+                    is LoadMovieResponse.Error -> {
+                        viewPagerAdapter.enableSecondFragment(false)
+                    }
+                }
+
             })
         } else {
             viewPagerAdapter.enableSecondFragment(true)

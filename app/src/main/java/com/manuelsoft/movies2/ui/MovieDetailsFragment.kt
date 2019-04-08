@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
 import com.manuelsoft.movies2.R
-import com.manuelsoft.movies2.repository.NaiveRepositoryImpl
+import com.manuelsoft.movies2.business.usecase.LoadUseCase
+import com.manuelsoft.movies2.repository.RepositoryImpl
 import kotlinx.android.synthetic.main.movie_details.*
-import kotlinx.android.synthetic.main.movie_presentation.*
 
 class MovieDetailsFragment : Fragment() {
 
@@ -19,8 +18,10 @@ class MovieDetailsFragment : Fragment() {
         val TAG: String = MovieDetailsFragment::class.java.simpleName
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.movie_details, container, false)
     }
 
@@ -31,23 +32,34 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val factory = NaiveRepositoryImpl.getInstance(requireContext())?.let {
-            ViewModelFactory(
-                it
-            )
+        val factory = RepositoryImpl.getInstance(requireContext())?.let {
+            ViewModelFactory(LoadUseCase(it))
         }
         val viewModel = ViewModelProviders.of(requireActivity(), factory).get(MainActivityViewModel::class.java)
-        viewModel.loadMovieSuccessful().observe(this, Observer {
-            webview_overview.loadData(getString(R.string.movie_overview, it.overview), "text/html", "UTF-8")
-            txv_overview_title.visibility = View.VISIBLE
-            webview_overview.visibility = View.VISIBLE
-            movie_details_progress_bar.visibility = View.GONE
-        })
+        viewModel.loadMovieWasSuccessful().observe(this, Observer {
+            when (it) {
+                is LoadMovieResponse.Success -> {
+                    webview_overview.loadData(
+                        getString(R.string.movie_overview, it.movieSummary.overview),
+                        "text/html",
+                        "UTF-8"
+                    )
+                    txv_overview_title.visibility = View.VISIBLE
+                    webview_overview.visibility = View.VISIBLE
+                    movie_details_progress_bar.visibility = View.GONE
+                }
+                is LoadMovieResponse.Error -> {
+                    txv_overview_title.visibility = View.VISIBLE
+                    webview_overview.visibility = View.VISIBLE
+                    movie_details_progress_bar.visibility = View.GONE
+                }
 
-        viewModel.loadingMovie().observe(this, Observer {
-            webview_overview.visibility = View.INVISIBLE
-            movie_details_progress_bar.visibility = View.VISIBLE
-        })
+                is LoadMovieResponse.Progressing -> {
+                    webview_overview.visibility = View.INVISIBLE
+                    movie_details_progress_bar.visibility = View.VISIBLE
+                }
+            }
 
+        })
     }
 }

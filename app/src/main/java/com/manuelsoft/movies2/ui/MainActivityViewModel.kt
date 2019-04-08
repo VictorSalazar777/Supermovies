@@ -3,124 +3,103 @@ package com.manuelsoft.movies2.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.manuelsoft.movies2.MyResponse
+import com.manuelsoft.movies2.business.usecase.ErrorType
+import com.manuelsoft.movies2.business.usecase.LoadUseCase
+import com.manuelsoft.movies2.business.usecase.UseCase
 import com.manuelsoft.movies2.data.Configuration
 import com.manuelsoft.movies2.data.Movie
-import com.manuelsoft.movies2.entity.MyMovie
-import com.manuelsoft.movies2.network.MovieModule
-import com.manuelsoft.movies2.repository.Repository
-import okhttp3.ResponseBody
+import com.manuelsoft.movies2.entity.MovieSummary
 import timber.log.Timber
 
-class MainActivityViewModel(private val repository: Repository) : ViewModel() {
+sealed class LoadMovieResponse {
+    data class Success(val movieSummary: MovieSummary) : LoadMovieResponse()
+    data class Error(val msg: String) : LoadMovieResponse()
+    object Progressing : LoadMovieResponse()
+}
 
-    private val loadConfigurationFailure = MutableLiveData<Throwable>()
-    private val loadConfigurationUnsuccessful = MutableLiveData<Int>()
+class MainActivityViewModel(private val loadUseCase: LoadUseCase) : ViewModel() {
+
     private var configuration: Configuration? = null
-    private var loadingMovie = MutableLiveData<Boolean>()
-    private lateinit var configurationResponse : MyResponse<Configuration>
 
-    private val loadMovieFailure = MutableLiveData<Throwable>()
-    private val loadMovieSuccessful = MutableLiveData<MyMovie>()
-    private val loadMovieUnsuccessful = MutableLiveData<Int>()
-    private val loadWasSuccessful = MutableLiveData<Boolean>()
+    private val loadMovieWasSuccessful = MutableLiveData<LoadMovieResponse>()
+    private var loadConfigurationWasSuccessful = false
+
+    private val loadMovieResponse = MutableLiveData<LoadMovieResponse>()
 
 
     init {
         loadConfiguration()
-        loadWasSuccessful.value = false
+        loadConfigurationWasSuccessful = false
     }
 
     private fun loadConfiguration() {
-        repository.loadConfiguration(callback = object : MovieModule.MovieCallback<Configuration> {
-            override fun onFailure(throwable: Throwable) {
-                Timber.e("loadConfigurationFailure()")
-                Timber.e(throwable)
-                loadConfigurationFailure.value = throwable
-                MyResponse.error("loadConfigurationFailure()", throwable)
+        loadUseCase.execute(useCaseCallback = object : UseCase.Callback<Configuration> {
+            override fun onSuccess(data: Configuration) {
+                configuration = data
+                loadConfigurationWasSuccessful = true
+
             }
 
-            override fun onSuccessful(body: Configuration?, code: Int) {
-                configuration = body
-                MyResponse.success(body)
+            override fun onError(type: ErrorType, msg: String) {
+                Timber.e("type: $type, msg: $msg")
+                loadConfigurationWasSuccessful = false
+
             }
 
-            override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
-                Timber.e( "%s, code = $code", errorBody?.string())
-                loadConfigurationUnsuccessful.value = code
-                MyResponse.error("%s, code = $code", errorBody?.string())
+            override fun onProgress() {
+                Timber.i("onProgress")
             }
 
-        })
+        }, someClass = Configuration::class.java)
     }
+
 
     fun loadMovie() {
-        loadingMovie.value = true
-        repository.loadMovie(callback = object : MovieModule.MovieCallback<Movie> {
-            override fun onFailure(throwable: Throwable) {
-                Timber.e("loadMovieFailure()")
-                Timber.e(throwable)
-                loadMovieFailure.value = throwable
-                loadWasSuccessful.value = false
+        if (!loadConfigurationWasSuccessful) {
+            loadConfiguration()
+            if (!loadConfigurationWasSuccessful) {
+                loadMovieWasSuccessful.value = LoadMovieResponse.Error("Configuration can't be obtained")
+                return
             }
+        }
 
-            override fun onSuccessful(body: Movie?, code: Int) {
-                body?.let { movie ->
-                    var url = ""
-                    configuration?.let { configuration->
-                        val baseUrl = configuration.images.secure_base_url
-                        val size500 = configuration.images.poster_sizes[4]
-                        url = baseUrl + size500 + movie.poster_path
+        loadUseCase.execute(useCaseCallback = object : UseCase.Callback<Movie> {
+            override fun onSuccess(data: Movie) {
+                val url: String
 
-                    }
+                val baseUrl = configuration?.images?.secure_base_url
+                val size500 = configuration?.images?.poster_sizes!![4]
+                url = baseUrl + size500 + data.poster_path
 
-                    Timber.i("poster url: $url")
-                    loadMovieSuccessful.value = MyMovie(
-                        movie.id,
-                        movie.title,
+                Timber.i("poster url: $url")
+                loadMovieResponse.value = LoadMovieResponse.Success(
+                    MovieSummary(
+                        data.id,
+                        data.title,
                         url,
-                        movie.overview
-                        )
-                    loadWasSuccessful.value = true
-                }
+                        data.overview
+                    )
+                )
+
             }
 
-            override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
-                Timber.e( "%s, code = $code", errorBody?.string())
-                loadMovieUnsuccessful.value = code
-                loadWasSuccessful.value = false
+            override fun onError(type: ErrorType, msg: String) {
+                Timber.e("type: $type, msg: $msg")
+                loadMovieResponse.value = LoadMovieResponse.Error(msg)
             }
-        })
+
+            override fun onProgress() {
+                Timber.i("onProgress")
+                loadMovieResponse.value = LoadMovieResponse.Progressing
+            }
+
+        }, someClass = Movie::class.java)
     }
 
-    fun loadingMovie() : LiveData<Boolean>{
-        return loadingMovie
-    }
 
-    fun loadWasSuccessful(): LiveData<Boolean> {
-        return loadWasSuccessful
+    fun loadMovieWasSuccessful(): LiveData<LoadMovieResponse> {
+        return loadMovieResponse
     }
-
-    fun loadConfigurationFailure(): LiveData<Throwable> {
-        return loadConfigurationFailure
-    }
-
-    fun loadConfigurationUnsuccessful(): LiveData<Int> {
-        return loadConfigurationUnsuccessful
-    }
-
-    fun loadMovieFailure(): LiveData<Throwable> {
-        return loadMovieFailure
-    }
-
-    fun loadMovieSuccessful(): LiveData<MyMovie> {
-        return loadMovieSuccessful
-    }
-
-    fun loadMovieUnsuccessful(): LiveData<Int> {
-        return loadMovieUnsuccessful
-    }
-
 
 
 }

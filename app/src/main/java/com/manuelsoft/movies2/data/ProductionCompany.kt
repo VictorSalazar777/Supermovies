@@ -8,4 +8,5 @@ data class ProductionCompany(
     @field:SerializedName("logoPath")
     val logoPath: String,
     @field:SerializedName("originCountry")
-    val originCountry: String)
+    val originCountry: String
+)
