@@ -19,19 +19,19 @@ import com.bumptech.glide.request.target.Target
 import com.manuelsoft.movies2.R
 import com.manuelsoft.movies2.business.usecase.LoadUseCase
 import com.manuelsoft.movies2.repository.RepositoryImpl
-import kotlinx.android.synthetic.main.movie_presentation.*
+import kotlinx.android.synthetic.main.movie_master.*
 
-class MoviePresentationFragment : Fragment() {
+class MoviePosterFragment : Fragment() {
 
     companion object {
-        val TAG: String = MoviePresentationFragment::class.java.simpleName
+        val TAG: String = MoviePosterFragment::class.java.simpleName
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.movie_presentation, container, false)
+        return inflater.inflate(R.layout.movie_master, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,7 +59,6 @@ class MoviePresentationFragment : Fragment() {
                 movie_presentation_progress_bar.visibility = View.GONE
                 return false
             }
-
         }
 
         viewModel.loadMovieWasSuccessful().observe(this, Observer {
@@ -73,12 +72,19 @@ class MoviePresentationFragment : Fragment() {
                         .error(R.mipmap.ic_launcher_round)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .priority(Priority.HIGH)
-                    Glide.with(this).applyDefaultRequestOptions(options).load(url).listener(requestListener)
+                    Glide
+                        .with(this)
+                        .applyDefaultRequestOptions(options)
+                        .load(url)
+                        .placeholder(R.drawable.placeholder2)
+                        .listener(requestListener)
                         .into(img_movie)
                 }
 
                 is LoadMovieResponse.Error -> {
-
+                    txv_title.visibility = View.VISIBLE
+                    img_movie.visibility = View.VISIBLE
+                    movie_presentation_progress_bar.visibility = View.GONE
                 }
 
                 is LoadMovieResponse.Progressing -> {

@@ -12,7 +12,7 @@ class ViewPagerAdapter(fm: FragmentManager?, private val context: Context) : Fra
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> MoviePresentationFragment()
+            0 -> MoviePosterFragment()
             1 -> MovieDetailsFragment()
             else -> throw IllegalArgumentException("Illegal page position!!")
         }

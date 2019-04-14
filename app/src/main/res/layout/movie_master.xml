@@ -9,8 +9,8 @@
 
     <ProgressBar
             android:id="@+id/movie_presentation_progress_bar"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:layout_width="@dimen/progressbar_layout_width"
+            android:layout_height="@dimen/progressbar_layout_height"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -31,12 +31,14 @@
     <ImageView
             android:id="@+id/img_movie"
             android:contentDescription="@string/description_movie_img"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="@dimen/image_layout_width"
+            android:layout_height="@dimen/image_layout_height"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/placeholder"
+    />
 
     <Button
             android:id="@+id/btn_load_movie"

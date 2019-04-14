@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.manuelsoft.movies2.R
 import com.manuelsoft.movies2.business.usecase.LoadUseCase
 import com.manuelsoft.movies2.repository.RepositoryImpl
-import kotlinx.android.synthetic.main.movie_details.*
+import kotlinx.android.synthetic.main.movie_detail.*
 
 class MovieDetailsFragment : Fragment() {
 
@@ -22,7 +22,7 @@ class MovieDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.movie_details, container, false)
+        return inflater.inflate(R.layout.movie_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
