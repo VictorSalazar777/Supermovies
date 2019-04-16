@@ -20,4 +20,6 @@
         <item name="android:textSize">20sp</item>
         <item name="backgroundTint">#00aaee</item>
     </style>
+
+
 </resources>

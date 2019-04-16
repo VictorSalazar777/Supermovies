@@ -51,10 +51,8 @@ class RetrofitProvider(private val context: Context) {
 
     fun loadMovie(retrofitProviderCallback: Callback<Movie>) {
         val retrofitService = provideRetrofitService()
-        val call = retrofitService.getMovie(
-            (Utils.getRandomDoubleBetweenRange(1.0, 40000.0).toInt()).toString(),
-            context.getString(R.string.themoviedb_api_key)
-        )
+        val call = retrofitService.getMovie(chooseRandomMovie(),
+            context.getString(R.string.themoviedb_api_key))
 
         Timber.i("loadMovie: url = %s", call.request().url())
         call.enqueue(object : retrofit2.Callback<Movie> {
@@ -71,6 +69,11 @@ class RetrofitProvider(private val context: Context) {
             }
 
         })
+    }
+
+    private fun chooseRandomMovie() : String {
+
+        return (Utils.getRandomDoubleBetweenRange(1.0, 40000.0).toInt()).toString()
     }
 
     fun <T> loadData(retrofitProviderCallback: Callback<T>, someClass: Class<T>) {

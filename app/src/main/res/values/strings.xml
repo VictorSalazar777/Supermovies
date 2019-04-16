@@ -17,6 +17,8 @@
         </html>
         ]]>
     </string>
+    <string name="txv_title_supermovies">Supermovies!</string>
+    <string name="movie_image">Movie image</string>
 
 
 </resources>
