@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.manuelsoft.movies2.MovieUi
 import com.manuelsoft.movies2.R
-import kotlinx.android.synthetic.main.categories_with_movie_list.view.*
+import kotlinx.android.synthetic.main.card_view_outer_movie_list.view.*
 
 class MovieListOuterAdapter(private val context: Context) :
     RecyclerView.Adapter<MovieListOuterAdapter.MyViewHolder>() {
@@ -22,7 +22,7 @@ class MovieListOuterAdapter(private val context: Context) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(context)
-        val itemView = inflater.inflate(R.layout.categories_with_movie_list, parent, false)
+        val itemView = inflater.inflate(R.layout.card_view_outer_movie_list, parent, false)
         val holder = MyViewHolder(itemView)
         holder.itemView.rv_movie_list.setRecycledViewPool(viewPool)
         holder.itemView.rv_movie_list.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)

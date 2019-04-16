@@ -1,10 +1,10 @@
 package com.manuelsoft.movies2.ui
 
 import android.content.Context
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Priority
@@ -12,7 +12,7 @@ import com.manuelsoft.movies2.MovieInfo
 import com.manuelsoft.movies2.R
 import com.manuelsoft.movies2.Utils.Companion.convertDpToPixel
 import com.manuelsoft.movies2.glide.GlideApp
-import kotlinx.android.synthetic.main.movie_list.view.*
+import kotlinx.android.synthetic.main.card_view_inner_movie_list.view.*
 
 
 class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter<MovieListInnerAdapter.MyViewHolder>() {
@@ -33,7 +33,7 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(context)
-        val itemView = inflater.inflate(R.layout.movie_list, parent, false)
+        val itemView = inflater.inflate(R.layout.card_view_inner_movie_list, parent, false)
         return MyViewHolder(itemView)
     }
 
@@ -53,6 +53,8 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
     }
 
     private fun bindImage(movieInfo: MovieInfo?, url: String?, holder: MyViewHolder) {
+    //    holder.itemView.iv_movie_image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.placeholder))
+
         if (movieInfo != null) {
             GlideApp.with(context)
                 .load(url)
