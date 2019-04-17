@@ -1,6 +1,7 @@
 package com.manuelsoft.movies2.ui
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.manuelsoft.movies2.MovieInfo
 import com.manuelsoft.movies2.R
 import com.manuelsoft.movies2.Utils.Companion.convertDpToPixel
@@ -16,13 +21,39 @@ import kotlinx.android.synthetic.main.card_view_inner_movie_list.view.*
 
 
 class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter<MovieListInnerAdapter.MyViewHolder>() {
+
     private var movieCategoriesList: List<MovieInfo>? = null
     private val circularProgressDrawable = CircularProgressDrawable(context)
+    private var requestListener :RequestListener<Drawable>
 
     init {
         circularProgressDrawable.apply {
             centerRadius = convertDpToPixel(50f, context)
             strokeWidth = convertDpToPixel(10f, context)
+        }
+
+        requestListener = object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                circularProgressDrawable.stop()
+                return true
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                circularProgressDrawable.stop()
+                return true
+            }
+
         }
     }
 
@@ -54,12 +85,13 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
 
     private fun bindImage(movieInfo: MovieInfo?, url: String?, holder: MyViewHolder) {
     //    holder.itemView.iv_movie_image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.placeholder))
-
         if (movieInfo != null) {
+            circularProgressDrawable.start()
             GlideApp.with(context)
                 .load(url)
                 .placeholder(circularProgressDrawable)
-                .error(R.drawable.placeholder2)
+                //.listener(requestListener)
+                .error(R.drawable.placeholder)
                 .priority(Priority.HIGH)
                 .into(holder.itemView.iv_movie_image)
             holder.setData(movieInfo.id, movieInfo.title)

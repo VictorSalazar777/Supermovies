@@ -17,6 +17,7 @@
                 android:layout_height="24dp"
                 android:layout_margin="8dp"
                 android:textSize="14sp"
+                android:fontFamily="@font/roboto"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 tools:text="The movie"/>

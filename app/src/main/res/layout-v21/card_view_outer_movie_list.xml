@@ -27,6 +27,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:textSize="20sp"
+                android:fontFamily="@font/roboto"
                 tools:text="Action"/>
 
         <androidx.recyclerview.widget.RecyclerView
