@@ -3,7 +3,7 @@ package com.manuelsoft.movies2.data
 import com.google.gson.annotations.SerializedName
 
 data class Images(
-    @field:SerializedName("images")
+    @field:SerializedName("base_url")
     val base_url: String,
     @field:SerializedName("secure_base_url")
     val secure_base_url: String,

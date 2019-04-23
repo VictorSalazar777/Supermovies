@@ -6,17 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.manuelsoft.movies2.MovieUi
 import com.manuelsoft.movies2.R
 import kotlinx.android.synthetic.main.card_view_outer_movie_list.view.*
 
 class MovieListOuterAdapter(private val context: Context) :
     RecyclerView.Adapter<MovieListOuterAdapter.MyViewHolder>() {
-    private var movieCategoriesList : List<MovieUi>? = null
+    private var movieResponseList : List<MovieResponse>? = null
     private val viewPool = RecyclerView.RecycledViewPool()
 
-    fun setData(movieCategoriesList: List<MovieUi>?) {
-        this.movieCategoriesList = movieCategoriesList
+    fun setData(movieResponseList: List<MovieResponse>) {
+        this.movieResponseList = movieResponseList
         notifyDataSetChanged()
     }
 
@@ -30,18 +29,27 @@ class MovieListOuterAdapter(private val context: Context) :
     }
 
     override fun getItemCount(): Int {
-        if (movieCategoriesList == null) {
+        if (movieResponseList == null) {
             return 0
         }
-        return movieCategoriesList!!.size
+        return movieResponseList!!.size
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val movieUi = movieCategoriesList?.get(position)
+        val movieResponse = movieResponseList?.get(position)
         val movieListInnerAdapter = MovieListInnerAdapter(context)
-        movieUi?.let {
-            movieListInnerAdapter.setData(movieUi.movieInfoList)
-            holder.setData("Comic", movieListInnerAdapter)
+        movieResponse?.let {
+            when (it) {
+                is MovieResponse.Success -> {
+                    movieListInnerAdapter.setData(it.movieUiResult.genreName, it.movieUiResult.movieResults)
+                    holder.setData(it.movieUiResult.genreName.toString(), movieListInnerAdapter)
+                }
+
+                is MovieResponse.Error -> {
+                    movieListInnerAdapter.setData(it.genreName,null)
+                    holder.setData(it.genreName.name, movieListInnerAdapter)
+                }
+            }
         }
     }
 

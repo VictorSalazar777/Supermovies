@@ -3,8 +3,9 @@ package com.manuelsoft.movies2
 import android.content.Context
 import android.util.DisplayMetrics
 
-data class MovieInfo(val id: Int, val title: String, val imageUrl: String)
+data class MovieInfo(val id: Long, val title: String, val imageUrl: String)
 data class MovieUi(val genre: Int, val movieInfoList: List<MovieInfo>)
+
 
 class Utils {
     companion object {
@@ -23,7 +24,7 @@ class Utils {
                 val movieInfoList = ArrayList<MovieInfo>(10)
 
                 for (j in 1..10) {
-                    val id = 1
+                    val id = 1L
                     val title = "Scary Movie"
                     val imageUrl = "https://image.tmdb.org/t/p/w300/8juTRqn5o43mnlVacp1IzZSd11N.jpg"
                     val movieInfo = MovieInfo(id, title, imageUrl)
@@ -35,5 +36,7 @@ class Utils {
             }
             return list
         }
+
+
     }
 }

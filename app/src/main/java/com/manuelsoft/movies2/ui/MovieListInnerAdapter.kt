@@ -5,32 +5,27 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.manuelsoft.movies2.MovieInfo
 import com.manuelsoft.movies2.R
-import com.manuelsoft.movies2.Utils.Companion.convertDpToPixel
+import com.manuelsoft.movies2.business.usecase.GenreName
+import com.manuelsoft.movies2.data2.MovieResult
 import com.manuelsoft.movies2.glide.GlideApp
 import kotlinx.android.synthetic.main.card_view_inner_movie_list.view.*
 
 
 class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter<MovieListInnerAdapter.MyViewHolder>() {
 
-    private var movieCategoriesList: List<MovieInfo>? = null
-    private val circularProgressDrawable = CircularProgressDrawable(context)
+    private var movieResultList: List<MovieResult>? = null
     private var requestListener :RequestListener<Drawable>
+    private lateinit var progressBar : ProgressBar
 
     init {
-        circularProgressDrawable.apply {
-            centerRadius = convertDpToPixel(50f, context)
-            strokeWidth = convertDpToPixel(10f, context)
-        }
 
         requestListener = object : RequestListener<Drawable> {
             override fun onLoadFailed(
@@ -39,8 +34,8 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
                 target: Target<Drawable>?,
                 isFirstResource: Boolean
             ): Boolean {
-                circularProgressDrawable.stop()
-                return true
+                progressBar.visibility = View.GONE
+                return false
             }
 
             override fun onResourceReady(
@@ -50,51 +45,51 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                circularProgressDrawable.stop()
-                return true
+                progressBar.visibility = View.GONE
+                return false
             }
 
         }
     }
 
-    fun setData(movieCategoriesList: List<MovieInfo>) {
-        this.movieCategoriesList = movieCategoriesList
+    fun setData(genreName: GenreName, movieResultList: List<MovieResult>?) {
+        this.movieResultList = movieResultList
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(context)
         val itemView = inflater.inflate(R.layout.card_view_inner_movie_list, parent, false)
+        progressBar = itemView.findViewById(R.id.movie_progress_bar)
         return MyViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
-        if (movieCategoriesList == null) {
+        if (movieResultList == null) {
             return 0
         }
-        return movieCategoriesList!!.size
+        return movieResultList!!.size
     }
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val movieInfo = movieCategoriesList?.get(position)
-        val url = movieInfo?.imageUrl
-        bindImage(movieInfo, url, holder)
+        val movieResult = movieResultList?.get(position)
+        val url = "https://image.tmdb.org/t/p/w300" + movieResult?.poster_path
+        bindImage(movieResult, url, holder)
 
     }
 
-    private fun bindImage(movieInfo: MovieInfo?, url: String?, holder: MyViewHolder) {
+    private fun bindImage(movieResult: MovieResult?, url: String?, holder: MyViewHolder) {
     //    holder.itemView.iv_movie_image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.placeholder))
-        if (movieInfo != null) {
-            circularProgressDrawable.start()
+        if (movieResult != null) {
+            progressBar.visibility = View.VISIBLE
             GlideApp.with(context)
                 .load(url)
-                .placeholder(circularProgressDrawable)
-                //.listener(requestListener)
                 .error(R.drawable.placeholder)
+                .listener(requestListener)
                 .priority(Priority.HIGH)
                 .into(holder.itemView.iv_movie_image)
-            holder.setData(movieInfo.id, movieInfo.title)
+            holder.setData(movieResult.id, movieResult.title)
         } else {
             GlideApp.with(context).clear(holder.itemView.iv_movie_image)
             holder.itemView.iv_movie_image.setImageDrawable(null)
@@ -102,8 +97,8 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var movieId : Int? = null
-        fun setData(movieId : Int, title : String) {
+        private var movieId : Long? = null
+        fun setData(movieId : Long, title : String) {
             this.movieId = movieId
             itemView.txv_movie_title.text = title
         }

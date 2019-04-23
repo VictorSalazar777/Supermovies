@@ -29,31 +29,31 @@ class MovieModuleTest {
     @Test
     fun loadMovie() {
 
-        var myMovie: Configuration? = null
-
-        val callback =  object : Callback<Configuration> {
-            override fun onFailure(throwable: Throwable) {
-                println("onFailure(): $throwable")
-            }
-
-            override fun onSuccessful(body: Configuration?, code: Int) {
-                myMovie = body
-                println("onSuccessful(): body = ${myMovie.toString()}")
-                println("onSuccessful(): code = $code")
-                countDownLatch.countDown()
-            }
-
-            override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
-                println("onUnsuccessful(): " + errorBody?.string() + "code = $code")
-            }
-
-        }
-        val movieModule = RetrofitProvider(context)
-        movieModule.loadConfiguration(callback)
-
-        countDownLatch.await(2000, TimeUnit.MILLISECONDS)
-
-        assertThat(myMovie, notNullValue())
+//        var myMovie: Configuration? = null
+//
+//        val callback =  object : Callback<Configuration> {
+//            override fun onFailure(throwable: Throwable) {
+//                println("onFailure(): $throwable")
+//            }
+//
+//            override fun onSuccessful(body: Configuration?, code: Int) {
+//                myMovie = body
+//                println("onSuccessful(): body = ${myMovie.toString()}")
+//                println("onSuccessful(): code = $code")
+//                countDownLatch.countDown()
+//            }
+//
+//            override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
+//                println("onUnsuccessful(): " + errorBody?.string() + "code = $code")
+//            }
+//
+//        }
+//        val movieModule = RetrofitProvider(context)
+//        movieModule.loadConfiguration(callback)
+//
+//        countDownLatch.await(2000, TimeUnit.MILLISECONDS)
+//
+//        assertThat(myMovie, notNullValue())
 
     }
 
@@ -63,14 +63,14 @@ class MovieModuleTest {
         var myConfiguration: Configuration? = null
 
         val callback =  object : Callback<Configuration> {
+
             override fun onFailure(throwable: Throwable) {
                 println("onFailure(): $throwable")
             }
 
-            override fun onSuccessful(body: Configuration?, code: Int) {
+            override fun onSuccessful(body: Configuration?) {
                 myConfiguration = body
                 println("onSuccessful(): body = ${myConfiguration.toString()}")
-                println("onSuccessful(): code = $code")
                 countDownLatch.countDown()
             }
 
@@ -79,10 +79,11 @@ class MovieModuleTest {
             }
 
         }
-        val movieModule = RetrofitProvider(context)
-        movieModule.loadConfiguration(callback)
 
-        countDownLatch.await(2000, TimeUnit.MILLISECONDS)
+        val loads = RetrofitLoads(context)
+        loads.loadConfiguration(callback)
+
+        countDownLatch.await(5000, TimeUnit.MILLISECONDS)
 
         assertThat(myConfiguration, notNullValue())
 

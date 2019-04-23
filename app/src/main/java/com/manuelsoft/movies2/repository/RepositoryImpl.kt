@@ -3,6 +3,7 @@ package com.manuelsoft.movies2.repository
 import android.content.Context
 import com.manuelsoft.movies2.business.Repository
 import com.manuelsoft.movies2.business.usecase.ErrorType
+import com.manuelsoft.movies2.network.RetrofitLoads
 import com.manuelsoft.movies2.network.RetrofitProvider
 import okhttp3.ResponseBody
 import timber.log.Timber
@@ -26,13 +27,13 @@ class RepositoryImpl private constructor(context: Context) : Repository {
         }
     }
 
-    private val retrofit = RetrofitProvider(context)
+    private val retrofitLoads = RetrofitLoads(context)
 
     override fun <T> load(repositoryCallback: Repository.Callback<T>, someClass: Class<T>) {
 
         repositoryCallback.onProgress()
 
-        retrofit.loadData(retrofitProviderCallback = object : RetrofitProvider.Callback<T> {
+        retrofitLoads.loadData(retrofitProviderCallback = object : RetrofitProvider.Callback<T> {
             override fun onFailure(throwable: Throwable) {
                 throwable.printStackTrace()
                 repositoryCallback.onError(ErrorType.FAILURE, throwable.toString(), null)

@@ -3,6 +3,7 @@ package com.manuelsoft.movies2.repository
 import android.content.Context
 import com.manuelsoft.movies2.business.*
 import com.manuelsoft.movies2.data.Configuration
+import com.manuelsoft.movies2.network.RetrofitLoads
 import com.manuelsoft.movies2.network.RetrofitProvider
 import okhttp3.ResponseBody
 
@@ -24,12 +25,12 @@ class ConfigurationRepositoryImpl private constructor(context: Context) : Config
         }
     }
 
-    private val movieModule = RetrofitProvider(context)
+    private val retrofitLoads = RetrofitLoads(context)
 
 
     override fun loadConfiguration(callback: ConfigurationRepository.Callback) {
         callback.onProgress(LoadDataResponse.onProgress())
-        movieModule.loadConfiguration(callback = object : RetrofitProvider.Callback<Configuration> {
+        retrofitLoads.loadConfiguration(callback = object : RetrofitProvider.Callback<Configuration> {
             override fun onFailure(throwable: Throwable) {
                 callback.onError(
                     LoadDataResponse.onError(
@@ -55,6 +56,5 @@ class ConfigurationRepositoryImpl private constructor(context: Context) : Config
 
         })
     }
-
 
 }

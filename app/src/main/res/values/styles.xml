@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/Widget.MyApp.TextView</item>
         <item name="materialButtonStyle">@style/Widget.MyApp.Button</item>
+        <item name="snackbarStyle">@style/Widget.MyApp.Snackbar</item>
+
     </style>
 
     <style name="Widget.MyApp.TextView" parent="android:Widget.TextView">
@@ -20,6 +22,11 @@
         <item name="android:textSize">20sp</item>
         <item name="backgroundTint">#00aaee</item>
     </style>
+
+    <style name="Widget.MyApp.Snackbar" parent="Widget.MaterialComponents.Snackbar.FullWidth">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
 
 
 </resources>
