@@ -7,8 +7,10 @@ import io.reactivex.Single
 import timber.log.Timber
 
 enum class GenreName {
-    Action, Adventure, Animation, Comedy, Crime, Documentary, Drama,
-    Family, Fantasy, History, Horror, Music, Mystery, Romance, ScienceFiction {
+    Action, Adventure, Animation, Comedy, Crime, Drama,
+    Family, Fantasy, History, Horror, Music, Mystery, Romance,
+    Documentary,
+    ScienceFiction {
 
         override fun toString(): String {
             return "Science Fiction"
@@ -67,7 +69,7 @@ class GenresLoading(private val repositoryRx: RepositoryRx) {
                 genreIds[genre.name] = genre.id
             }
             return@map genreIds
-        }.doOnError { e-> Timber.e(e) }
+        }
     }
 
 }

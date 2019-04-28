@@ -1,13 +1,12 @@
 package com.manuelsoft.movies2.network
 
 import com.manuelsoft.movies2.data.Configuration
-import com.manuelsoft.movies2.data2.DiscoverMoviesResult
 import com.manuelsoft.movies2.data.Genre
 import com.manuelsoft.movies2.data.GenresResponse
 import com.manuelsoft.movies2.data.Movie
+import com.manuelsoft.movies2.data2.DiscoverMoviesResult
 import io.reactivex.Single
 import retrofit2.Call
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

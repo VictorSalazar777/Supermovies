@@ -1,7 +1,6 @@
 package com.manuelsoft.movies2.repository
 
 import android.content.Context
-import androidx.lifecycle.Transformations.map
 import com.manuelsoft.movies2.business.RepositoryRx
 import com.manuelsoft.movies2.data.Configuration
 import com.manuelsoft.movies2.data.Genre

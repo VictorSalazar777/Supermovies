@@ -38,8 +38,6 @@ class MoviesLoading(private val repositoryRx: RepositoryRx) {
     fun getMoviesResult(genre: String) : Single<List<MovieResult>> {
         return repositoryRx.getDiscoveredMoviesRx(genre).map{
             it.movieListResult
-        }.doOnSuccess {
-            Timber.i("result--> $it")
         }
     }
 

@@ -17,40 +17,13 @@ import com.manuelsoft.movies2.business.usecase.GenreName
 import com.manuelsoft.movies2.data2.MovieResult
 import com.manuelsoft.movies2.glide.GlideApp
 import kotlinx.android.synthetic.main.card_view_inner_movie_list.view.*
+import timber.log.Timber
 
 
 class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter<MovieListInnerAdapter.MyViewHolder>() {
 
     private var movieResultList: List<MovieResult>? = null
-    private var requestListener :RequestListener<Drawable>
-    private lateinit var progressBar : ProgressBar
-
-    init {
-
-        requestListener = object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                progressBar.visibility = View.GONE
-                return false
-            }
-
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                progressBar.visibility = View.GONE
-                return false
-            }
-
-        }
-    }
+    private lateinit var requestListener :RequestListener<Drawable>
 
     fun setData(genreName: GenreName, movieResultList: List<MovieResult>?) {
         this.movieResultList = movieResultList
@@ -60,7 +33,6 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(context)
         val itemView = inflater.inflate(R.layout.card_view_inner_movie_list, parent, false)
-        progressBar = itemView.findViewById(R.id.movie_progress_bar)
         return MyViewHolder(itemView)
     }
 
@@ -74,15 +46,23 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val movieResult = movieResultList?.get(position)
-        val url = "https://image.tmdb.org/t/p/w300" + movieResult?.poster_path
+        val url = "https://image.tmdb.org/t/p/w500" + movieResult?.poster_path
+
+        val id = movieResult?.id
+        val title = movieResult?.title
+        Timber.i(" movie id = $id, title = $title")
+        if (movieResult?.poster_path == null) {
+
+            Timber.e("No image --> movie id = $id")
+        }
         bindImage(movieResult, url, holder)
 
     }
 
     private fun bindImage(movieResult: MovieResult?, url: String?, holder: MyViewHolder) {
-    //    holder.itemView.iv_movie_image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.placeholder))
         if (movieResult != null) {
-            progressBar.visibility = View.VISIBLE
+            setupGlideListener(holder.itemView.movie_progress_bar)
+            holder.itemView.movie_progress_bar.visibility = View.VISIBLE
             GlideApp.with(context)
                 .load(url)
                 .error(R.drawable.placeholder)
@@ -98,9 +78,39 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var movieId : Long? = null
+        private var progressBar: ProgressBar? = null
         fun setData(movieId : Long, title : String) {
             this.movieId = movieId
+            this.progressBar = itemView.movie_progress_bar
             itemView.txv_movie_title.text = title
+        }
+    }
+
+    private fun setupGlideListener(progressBar: ProgressBar) {
+        requestListener = object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                progressBar.visibility = View.GONE
+                Timber.i("Glide -> onLoadFailed()")
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                progressBar.visibility = View.GONE
+                Timber.i("Glide -> onResourceReady()")
+                return false
+            }
+
         }
     }
 

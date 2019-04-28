@@ -76,7 +76,7 @@ class MoviePosterFragment : Fragment() {
                         .with(this)
                         .applyDefaultRequestOptions(options)
                         .load(url)
-                        .placeholder(R.drawable.placeholder2)
+                        .placeholder(R.drawable.placeholder)
                         .listener(requestListener)
                         .into(img_movie)
                 }

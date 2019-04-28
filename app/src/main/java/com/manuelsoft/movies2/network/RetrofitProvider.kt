@@ -24,7 +24,7 @@ class RetrofitProvider private constructor(context: Context){
             .baseUrl(context.getString(R.string.base_url))
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(ApiWorker.client)
+          //  .client(ApiWorker.client)
             .build()
     }
 

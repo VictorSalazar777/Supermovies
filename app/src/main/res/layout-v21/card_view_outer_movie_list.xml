@@ -24,10 +24,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:textSize="20sp"
                 android:fontFamily="@font/roboto"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 tools:text="Action"/>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -5,26 +5,32 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="android:textViewStyle">@style/Widget.MyApp.TextView</item>
         <item name="materialButtonStyle">@style/Widget.MyApp.Button</item>
         <item name="snackbarStyle">@style/Widget.MyApp.Snackbar</item>
+        <item name="toolbarStyle">@style/Widget.MyApp.Toolbar</item>
+    </style>
 
+    <style name="Widget.MyApp.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/colorOnPrimary</item>
     </style>
 
     <style name="Widget.MyApp.TextView" parent="android:Widget.TextView">
-        <item name="android:textSize">25sp</item>
-        <item name="android:textColor">#0000ff</item>
+        <!--<item name="android:textSize">25sp</item>-->
+        <!--<item name="android:textColor">#0000ff</item>-->
     </style>
 
     <style name="Widget.MyApp.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">#0000ff</item>
-        <item name="android:textSize">20sp</item>
-        <item name="backgroundTint">#00aaee</item>
+        <!--<item name="android:textColor">#0000ff</item>-->
+        <!--<item name="android:textSize">20sp</item>-->
+        <!--<item name="backgroundTint">#00aaee</item>-->
     </style>
 
     <style name="Widget.MyApp.Snackbar" parent="Widget.MaterialComponents.Snackbar.FullWidth">
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <!--<item name="android:background">@color/colorPrimaryDark</item>-->
     </style>
 
 

@@ -6,7 +6,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.manuelsoft.movies2.R
 
-class ViewPagerAdapter(fm: FragmentManager?, private val context: Context) : FragmentStatePagerAdapter(fm) {
+class ViewPagerAdapter(fm: FragmentManager, private val context: Context)
+    : FragmentStatePagerAdapter(fm) {
 
     private var count = 1
 

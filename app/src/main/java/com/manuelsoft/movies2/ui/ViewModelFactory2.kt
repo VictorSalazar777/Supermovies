@@ -2,7 +2,6 @@ package com.manuelsoft.movies2.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.manuelsoft.movies2.business.usecase.MoviesLoading
 import com.manuelsoft.movies2.business.usecase.MoviesUiProvider
 
 class ViewModelFactory2(private val moviesResults: MoviesUiProvider) :

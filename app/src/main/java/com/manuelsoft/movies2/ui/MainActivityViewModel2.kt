@@ -49,8 +49,8 @@ class MainActivityViewModel2(
         Timber.i("subscribeToMovieListProvider()")
 
         val genres = listOf(
-            GenreName.Action, GenreName.Documentary, GenreName.ScienceFiction,
-            GenreName.Fantasy, GenreName.Family, GenreName.Adventure
+            GenreName.Action, GenreName.History, GenreName.Music,
+            GenreName.Fantasy, GenreName.Family, GenreName.Western
         )
 
 

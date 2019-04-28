@@ -12,7 +12,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#ff0000"
             android:elevation="4dp"
             app:title="@string/app_name"
             android:fontFamily="@font/roboto"
