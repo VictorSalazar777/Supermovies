@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="progressbar_layout_width">125dp</dimen>
-    <dimen name="progressbar_layout_height">125dp</dimen>
-    <dimen name="image_layout_width">300dp</dimen>
-    <dimen name="image_layout_height">450dp</dimen>
-</resources>

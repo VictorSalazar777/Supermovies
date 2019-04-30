@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="btn_load_movie">Cargar película</string>
-    <string name="description_movie_img">imagen de poster</string>
-    <string name="txv_title">Título</string>
-    <string name="txv_overview_title">Resumen</string>
     <string name="app_name">¡Super Pelis!</string>
-    <string name="txv_title_supermovies">@string/app_name</string>
 </resources>
