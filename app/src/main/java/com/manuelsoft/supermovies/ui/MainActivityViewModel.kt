@@ -46,7 +46,7 @@ class MainActivityViewModel(
 
         val genres = listOf(
             GenreName.Action, GenreName.Animation, GenreName.Music,
-            GenreName.Fantasy, GenreName.Family, GenreName.Western
+            GenreName.Mystery, GenreName.Family, GenreName.Western
         )
 
         Observable.fromIterable(genres)
