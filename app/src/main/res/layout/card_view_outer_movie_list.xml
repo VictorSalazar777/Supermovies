@@ -30,7 +30,7 @@
                 android:fontFamily="@font/roboto"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                tools:text="Action"/>
+                tools:text="Action" android:layout_marginStart="16dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movie_list"

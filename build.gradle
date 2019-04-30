@@ -5,7 +5,7 @@ buildscript {
     ext.retrofit_version = '2.5.0'
     ext.lifecycle_version = '2.0.0'
     ext.glide_version = '4.9.0'
-    ext.kotlin_coroutine_version = "1.0.1"
+    //ext.kotlin_coroutine_version = "1.0.1"
     repositories {
         google()
         jcenter()
