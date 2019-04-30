@@ -9,8 +9,8 @@ class ViewModelFactory(private val moviesResults: MoviesUiProvider) :
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainActivityViewModel2::class.java)) {
-            return MainActivityViewModel2(moviesResults) as T
+        if (modelClass.isAssignableFrom(MainActivityViewModel::class.java)) {
+            return MainActivityViewModel(moviesResults) as T
         }
 
         throw ClassNotFoundException("class = " + modelClass.name)

@@ -19,7 +19,7 @@ sealed class MovieResponse {
     data class Error(val msg: String, val genreName: GenreName) : MovieResponse()
 }
 
-class MainActivityViewModel2(
+class MainActivityViewModel(
     private val moviesResults: MoviesUiProvider
 ) : ViewModel(), LifecycleObserver {
 
@@ -45,7 +45,7 @@ class MainActivityViewModel2(
         Timber.i("subscribeToMovieListProvider()")
 
         val genres = listOf(
-            GenreName.Action, GenreName.History, GenreName.Music,
+            GenreName.Action, GenreName.Animation, GenreName.Music,
             GenreName.Fantasy, GenreName.Family, GenreName.Western
         )
 

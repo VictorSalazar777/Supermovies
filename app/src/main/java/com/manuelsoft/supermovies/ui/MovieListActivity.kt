@@ -35,7 +35,7 @@ class MovieListActivity : AppCompatActivity() {
     private fun setupViewModelObserver() {
         val factory = ViewModelFactory(MoviesUiProvider(MoviesLoading(RepositoryImpl(this)),
             GenresLoading(RepositoryImpl(this))))
-        val viewmodel = ViewModelProviders.of(this, factory).get(MainActivityViewModel2::class.java)
+        val viewmodel = ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
         val lifecycle = LifecycleRegistry(this)
         lifecycle.addObserver(viewmodel)
         viewmodel.getMovieResponseListLiveData().observe(this, Observer { movieResponseList: List<MovieResponse> ->

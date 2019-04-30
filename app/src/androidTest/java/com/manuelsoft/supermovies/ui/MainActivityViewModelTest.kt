@@ -39,7 +39,7 @@ class MainActivityViewModelTest {
 
     @Test
     fun subscribeToMovieListProvider() {
-        val viewmodel = ViewModelProviders.of(activityTestRule.activity, factory).get(MainActivityViewModel2::class.java)
+        val viewmodel = ViewModelProviders.of(activityTestRule.activity, factory).get(MainActivityViewModel::class.java)
 
         val testObserver = TestObserver<MovieUiResult>()
         viewmodel.getMovies(GenreName.Action).subscribe(testObserver)
