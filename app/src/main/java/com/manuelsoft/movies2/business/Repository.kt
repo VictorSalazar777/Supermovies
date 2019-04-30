@@ -1,14 +1,14 @@
 package com.manuelsoft.movies2.business
 
-import com.manuelsoft.movies2.business.usecase.ErrorType
+import com.manuelsoft.movies2.data.GenresResponse
+import com.manuelsoft.movies2.data2.DiscoverMoviesResult
+import io.reactivex.Single
 
 interface Repository {
 
-    interface Callback<T> {
-        fun onSuccess(t: T?)
-        fun onError(type: ErrorType, msg: String, extra: String?)
-        fun onProgress()
-    }
+    fun getGenres() : Single<GenresResponse>
 
-    fun <T> load(repositoryCallback: Callback<T>, someClass: Class<T>)
+    fun getDiscoveredMovies() : Single<DiscoverMoviesResult>
+
+    fun getDiscoveredMovies(genre: String) : Single<DiscoverMoviesResult>
 }

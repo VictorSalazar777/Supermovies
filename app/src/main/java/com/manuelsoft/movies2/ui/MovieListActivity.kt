@@ -15,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.manuelsoft.movies2.business.usecase.GenresLoading
 import com.manuelsoft.movies2.business.usecase.MoviesLoading
 import com.manuelsoft.movies2.business.usecase.MoviesUiProvider
-import com.manuelsoft.movies2.repository.RepositoryRxImpl
+import com.manuelsoft.movies2.repository.RepositoryImpl
 import kotlinx.android.synthetic.main.activity_movie_list.*
 
 
@@ -33,8 +33,8 @@ class MovieListActivity : AppCompatActivity() {
     }
 
     private fun setupViewModelObserver() {
-        val factory = ViewModelFactory2(MoviesUiProvider(MoviesLoading(RepositoryRxImpl(this)),
-            GenresLoading(RepositoryRxImpl(this))))
+        val factory = ViewModelFactory(MoviesUiProvider(MoviesLoading(RepositoryImpl(this)),
+            GenresLoading(RepositoryImpl(this))))
         val viewmodel = ViewModelProviders.of(this, factory).get(MainActivityViewModel2::class.java)
         val lifecycle = LifecycleRegistry(this)
         lifecycle.addObserver(viewmodel)

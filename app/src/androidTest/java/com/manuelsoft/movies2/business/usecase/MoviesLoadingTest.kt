@@ -3,14 +3,14 @@ package com.manuelsoft.movies2.business.usecase
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.manuelsoft.movies2.data2.MovieResult
-import com.manuelsoft.movies2.repository.RepositoryRxImpl
+import com.manuelsoft.movies2.repository.RepositoryImpl
 import io.reactivex.observers.TestObserver
 import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class SummaryMoviesLoadingTest {
+class MoviesLoadingTest {
 
     private lateinit var context: Context
     private lateinit var countDownLatch: CountDownLatch
@@ -20,7 +20,7 @@ class SummaryMoviesLoadingTest {
     fun init() {
         context = ApplicationProvider.getApplicationContext()
         countDownLatch = CountDownLatch(1)
-        summaryMoviesLoading = MoviesLoading(RepositoryRxImpl(context))
+        summaryMoviesLoading = MoviesLoading(RepositoryImpl(context))
 
     }
 

@@ -1,107 +1,95 @@
 package com.manuelsoft.movies2.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.manuelsoft.movies2.business.usecase.ErrorType
-import com.manuelsoft.movies2.business.usecase.LoadUseCase
-import com.manuelsoft.movies2.business.usecase.UseCase
-import com.manuelsoft.movies2.data.Configuration
-import com.manuelsoft.movies2.data.Movie
-import com.manuelsoft.movies2.entity.MovieSummary
+import androidx.lifecycle.*
+import com.manuelsoft.movies2.business.usecase.GenreName
+import com.manuelsoft.movies2.business.usecase.MovieUiResult
+import com.manuelsoft.movies2.business.usecase.MoviesUiProvider
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-sealed class LoadMovieResponse {
-    data class Success(val movieSummary: MovieSummary) : LoadMovieResponse()
-    data class Error(val msg: String) : LoadMovieResponse()
-    object Progressing : LoadMovieResponse()
+
+sealed class MovieResponse {
+    data class Success(val movieUiResult: MovieUiResult) : MovieResponse()
+    data class Error(val msg: String, val genreName: GenreName) : MovieResponse()
 }
 
-class MainActivityViewModel(private val loadUseCase: LoadUseCase) : ViewModel() {
+class MainActivityViewModel2(
+    private val moviesResults: MoviesUiProvider
+) : ViewModel(), LifecycleObserver {
 
-    private var configuration: Configuration? = null
+    private val compositeDisposable = CompositeDisposable()
 
-    private val loadMovieWasSuccessful = MutableLiveData<LoadMovieResponse>()
-    private var loadConfigurationWasSuccessful = false
-
-    private val loadMovieResponse = MutableLiveData<LoadMovieResponse>()
-
+    private val movieResponseListLiveData = MutableLiveData<List<MovieResponse>>()
+    private val movieResponseList = ArrayList<MovieResponse>()
 
     init {
-        loadConfiguration()
-        loadConfigurationWasSuccessful = false
+        subscribeToMovieListProvider()
     }
 
-    private fun loadConfiguration() {
-        loadUseCase.execute(useCaseCallback = object : UseCase.Callback<Configuration> {
-            override fun onSuccess(data: Configuration) {
-                configuration = data
-                loadConfigurationWasSuccessful = true
-
-            }
-
-            override fun onError(type: ErrorType, msg: String) {
-                Timber.e("type: $type, msg: $msg")
-                loadConfigurationWasSuccessful = false
-
-            }
-
-            override fun onProgress() {
-                Timber.i("onProgress")
-            }
-
-        }, someClass = Configuration::class.java)
+    fun getMovieResponseListLiveData(): LiveData<List<MovieResponse>> {
+        return movieResponseListLiveData
     }
 
+    private fun setMovieResponseListLiveData() {
+        movieResponseListLiveData.postValue(movieResponseList)
+    }
 
-    fun loadMovie() {
-        if (!loadConfigurationWasSuccessful) {
-            loadConfiguration()
-            if (!loadConfigurationWasSuccessful) {
-                loadMovieWasSuccessful.value = LoadMovieResponse.Error("Configuration can't be obtained")
-                return
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun subscribeToMovieListProvider() {
+        Timber.i("subscribeToMovieListProvider()")
+
+        val genres = listOf(
+            GenreName.Action, GenreName.History, GenreName.Music,
+            GenreName.Fantasy, GenreName.Family, GenreName.Western
+        )
+
+        Observable.fromIterable(genres)
+            .subscribeOn(Schedulers.io())
+            .flatMapSingle(::getMovies)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<MovieUiResult> {
+                override fun onComplete() {
+                    setMovieResponseListLiveData()
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onNext(t: MovieUiResult) {
+                    val response = MovieResponse.Success(t)
+                    movieResponseList.add(response)
+                }
+
+                override fun onError(e: Throwable) {
+                }
+
+            })
+
+    }
+
+    fun getMovies(genreName: GenreName): Single<MovieUiResult> {
+        return moviesResults
+            .getMoviesResult(genreName)
+//            .doOnSuccess { t -> Timber.i("result--> + $t") }
+            .doOnError {
+                Timber.e(it)
+                val response = MovieResponse.Error("Some error ocurred", genreName)
+                movieResponseList.add(response)
             }
-        }
-
-        loadUseCase.execute(useCaseCallback = object : UseCase.Callback<Movie> {
-            override fun onSuccess(data: Movie) {
-                val url: String
-
-                val baseUrl = configuration?.images?.secure_base_url
-                val size500 = configuration?.images?.poster_sizes!![4]
-                url = baseUrl + size500 + data.poster_path
-
-                Timber.i("poster url: $url")
-                loadMovieResponse.value = LoadMovieResponse.Success(
-                    MovieSummary(
-                        data.id,
-                        data.title,
-                        url,
-                        data.overview
-                    )
-                )
-
-            }
-
-            override fun onError(type: ErrorType, msg: String) {
-                Timber.e("type: $type, msg: $msg")
-                loadMovieResponse.value = LoadMovieResponse.Error(msg)
-            }
-
-            override fun onProgress() {
-                Timber.i("onProgress")
-                loadMovieResponse.value = LoadMovieResponse.Progressing
-            }
-
-        }, someClass = Movie::class.java)
     }
 
 
-    fun loadMovieWasSuccessful(): LiveData<LoadMovieResponse> {
-        return loadMovieResponse
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun disposeAll() {
+        compositeDisposable.clear()
     }
-
-
 
 
 }

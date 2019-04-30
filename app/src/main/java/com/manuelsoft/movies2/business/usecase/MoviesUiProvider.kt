@@ -15,13 +15,6 @@ class MoviesUiProvider(private val moviesLoading: MoviesLoading,
     fun getMoviesResult(genreName: GenreName) : Single<MovieUiResult> {
         return genresLoading.getGenreId(genreName)
             .flatMap { moviesLoading.getMoviesResult(it) }
-            .flatMap { Single.just(MovieUiResult(genreName, it))
-        }.doOnError { e->Timber.e(e) }
-    }
-
-    fun getMoviesResult2(genreName: GenreName) : Single<MovieUiResult> {
-        return genresLoading.getGenreId2(genreName)
-            .flatMap { moviesLoading.getMoviesResult(it) }
             .flatMap { Single.just(MovieUiResult(genreName, it)) }
             .doOnSuccess { t -> Timber.i("result--> + $t") }
             .doOnError { e->Timber.e(e) }

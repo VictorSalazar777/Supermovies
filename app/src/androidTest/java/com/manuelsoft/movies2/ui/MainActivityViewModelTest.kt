@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.ActivityTestRule
 import com.manuelsoft.movies2.business.usecase.*
-import com.manuelsoft.movies2.data2.MovieResult
-import com.manuelsoft.movies2.repository.RepositoryRxImpl
+import com.manuelsoft.movies2.repository.RepositoryImpl
 import io.reactivex.observers.TestObserver
 import org.junit.Test
 
@@ -14,12 +13,12 @@ import org.junit.Before
 import org.junit.Rule
 import java.util.concurrent.CountDownLatch
 
-class MainActivityViewModel2Test {
+class MainActivityViewModelTest {
 
     private lateinit var context: Context
     private lateinit var countDownLatch: CountDownLatch
     private lateinit var moviesUiProvider: MoviesUiProvider
-    private lateinit var factory : ViewModelFactory2
+    private lateinit var factory : ViewModelFactory
 
     @Rule
     @JvmField
@@ -30,17 +29,11 @@ class MainActivityViewModel2Test {
         context = ApplicationProvider.getApplicationContext()
         countDownLatch = CountDownLatch(1)
         moviesUiProvider = MoviesUiProvider(
-            MoviesLoading(RepositoryRxImpl(context)),
-            GenresLoading(RepositoryRxImpl(context)))
-        factory = ViewModelFactory2(moviesUiProvider)
+            MoviesLoading(RepositoryImpl(context)),
+            GenresLoading(RepositoryImpl(context)))
+        factory = ViewModelFactory(moviesUiProvider)
     }
 
-    @Test
-    fun getMovieListResponse() {
-
-
-
-    }
 
     @Test
     fun subscribeToMovieListProvider() {

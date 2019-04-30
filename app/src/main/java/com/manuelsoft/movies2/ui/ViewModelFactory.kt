@@ -2,16 +2,17 @@ package com.manuelsoft.movies2.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.manuelsoft.movies2.business.usecase.LoadUseCase
+import com.manuelsoft.movies2.business.usecase.MoviesUiProvider
 
-class ViewModelFactory(private val loadUseCase: LoadUseCase) : ViewModelProvider.Factory {
+class ViewModelFactory(private val moviesResults: MoviesUiProvider) :
+    ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainActivityViewModel::class.java)) {
-            return MainActivityViewModel(loadUseCase) as T
+        if (modelClass.isAssignableFrom(MainActivityViewModel2::class.java)) {
+            return MainActivityViewModel2(moviesResults) as T
         }
 
-        throw IllegalArgumentException("unknown modelClass $modelClass")
+        throw ClassNotFoundException("class = " + modelClass.name)
     }
 }

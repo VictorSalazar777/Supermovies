@@ -2,56 +2,52 @@ package com.manuelsoft.movies2.repository
 
 import android.content.Context
 import com.manuelsoft.movies2.business.Repository
-import com.manuelsoft.movies2.business.usecase.ErrorType
+import com.manuelsoft.movies2.data.GenresResponse
+import com.manuelsoft.movies2.data2.DiscoverMoviesResult
 import com.manuelsoft.movies2.network.RetrofitLoads
-import com.manuelsoft.movies2.network.RetrofitProvider
-import okhttp3.ResponseBody
+import io.reactivex.Maybe
+import io.reactivex.Single
 import timber.log.Timber
 
-class RepositoryImpl private constructor(context: Context) : Repository {
-
-    companion object {
-        private var instance: RepositoryImpl? = null
-        private var LOCK = Object()
-
-        fun getInstance(context: Context): Repository? {
-            if (instance == null) {
-                synchronized(LOCK) {
-                    if (instance == null) {
-                        instance = RepositoryImpl(context = context.applicationContext)
-                    }
-                }
-            }
-
-            return instance
-        }
-    }
+class RepositoryImpl(context: Context) : Repository {
 
     private val retrofitLoads = RetrofitLoads(context)
+    private val genreBag = ArrayList<GenresResponse>(1)
 
-    override fun <T> load(repositoryCallback: Repository.Callback<T>, someClass: Class<T>) {
+    override fun getGenres(): Single<GenresResponse> {
+        return Maybe.concat(
+            getGenresFromCache(),
+            getGenresFromNetwork().toMaybe()
+        ).firstElement().toSingle()
+    }
 
-        repositoryCallback.onProgress()
-
-        retrofitLoads.loadData(retrofitProviderCallback = object : RetrofitProvider.Callback<T> {
-            override fun onFailure(throwable: Throwable) {
-                throwable.printStackTrace()
-                repositoryCallback.onError(ErrorType.FAILURE, throwable.toString(), null)
+    private fun getGenresFromCache() : Maybe<GenresResponse> {
+        return Single.fromCallable<List<GenresResponse>> {
+            return@fromCallable genreBag }
+            .filter {genreBag.isNotEmpty()}
+            .map {genreBag[0]}
+            .doOnSuccess {
+                Timber.i("getGenresFromCache()")
             }
-
-            override fun onSuccessful(body: T?) {
-                Timber.i("onSuccessful(), body: $body")
-                repositoryCallback.onSuccess(body)
+            .doOnError {
+                Timber.i("getGenresFromCache() Error ->$it")
             }
-
-            override fun onUnsuccessful(code: Int, errorBody: ResponseBody?) {
-                Timber.i("onUnSuccessful(), code $code, error: ${errorBody?.string()}")
-                repositoryCallback.onError(ErrorType.UNSUCCESSFUL, code.toString(), errorBody?.string())
-            }
-
-        }, someClass = someClass)
 
     }
 
+    private fun getGenresFromNetwork() : Single<GenresResponse> {
+        return retrofitLoads.getGenres()
+            .doOnSuccess {
+                genreBag.add(it)
+                Timber.i("getGenresFromNetwork()")
+            }
+    }
 
+    override fun getDiscoveredMovies(): Single<DiscoverMoviesResult> {
+        return retrofitLoads.getDiscoveredMovies()
+    }
+
+    override fun getDiscoveredMovies(genre: String): Single<DiscoverMoviesResult> {
+        return retrofitLoads.getDiscoveredMovies(genre)
+    }
 }
