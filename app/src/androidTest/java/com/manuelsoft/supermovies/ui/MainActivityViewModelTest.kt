@@ -1,7 +1,7 @@
 package com.manuelsoft.supermovies.ui
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.ActivityTestRule
 import com.manuelsoft.supermovies.business.GenreName
@@ -24,7 +24,7 @@ class MainActivityViewModelTest {
 
     @Rule
     @JvmField
-    val activityTestRule = ActivityTestRule<MovieListActivity>(MovieListActivity::class.java)
+    val activityTestRule = ActivityTestRule(MovieListActivity::class.java)
 
     @Before
     fun init() {
@@ -39,7 +39,7 @@ class MainActivityViewModelTest {
 
     @Test
     fun subscribeToMovieListProvider() {
-        val viewmodel = ViewModelProviders.of(activityTestRule.activity, factory).get(MainActivityViewModel::class.java)
+        val viewmodel = ViewModelProvider(activityTestRule.activity, factory).get(MainActivityViewModel::class.java)
 
         val testObserver = TestObserver<MovieUiResult>()
         viewmodel.getMovies(GenreName.Action).subscribe(testObserver)

@@ -7,8 +7,7 @@ import android.text.style.ForegroundColorSpan
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -35,10 +34,10 @@ class MovieListActivity : AppCompatActivity() {
     private fun setupViewModelObserver() {
         val factory = ViewModelFactory(MoviesUiProvider(MoviesLoading(RepositoryImpl(this)),
             GenresLoading(RepositoryImpl(this))))
-        val viewmodel = ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
+        val viewmodel = ViewModelProvider(this, factory).get(MainActivityViewModel::class.java)
         val lifecycle = LifecycleRegistry(this)
         lifecycle.addObserver(viewmodel)
-        viewmodel.getMovieResponseListLiveData().observe(this, Observer { movieResponseList: List<MovieResponse> ->
+        viewmodel.getMovieResponseListLiveData().observe(this, { movieResponseList: List<MovieResponse> ->
             movieResponseList.forEach { movieResponse ->
                 when (movieResponse) {
                     is MovieResponse.Success -> {
@@ -67,6 +66,7 @@ class MovieListActivity : AppCompatActivity() {
                             0,
                             movieResponse.msg.length,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+
                         )
 
                         Snackbar.make(

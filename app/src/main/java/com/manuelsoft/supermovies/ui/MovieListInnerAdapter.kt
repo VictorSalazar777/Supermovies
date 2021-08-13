@@ -52,7 +52,6 @@ class MovieListInnerAdapter(private val context: Context) : RecyclerView.Adapter
         val title = movieResult?.title
         Timber.i(" movie id = $id, title = $title")
         if (movieResult?.poster_path == null) {
-
             Timber.e("No image --> movie id = $id")
         }
         bindImage(movieResult, url, holder)
